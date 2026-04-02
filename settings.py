@@ -7,19 +7,6 @@ SESSION_CONFIGS = [
         num_demo_participants=2,
         app_sequence=['green_game'],
     ),
-
-    dict(
-        name='guess_two_thirds',
-        display_name="Guess 2/3 of the Average",
-        app_sequence=['guess_two_thirds', 'payment_info'],
-        num_demo_participants=3,
-    ),
-
-    dict(
-        name='survey',
-        app_sequence=['survey', 'payment_info'],
-        num_demo_participants=1,
-    ),
 ]
 
 SESSION_CONFIG_DEFAULTS = dict(
@@ -41,3 +28,5 @@ ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 DEMO_PAGE_INTRO_HTML = ""
 
 SECRET_KEY = '123456789'
+
+INSTALLED_APPS = ['otree']
