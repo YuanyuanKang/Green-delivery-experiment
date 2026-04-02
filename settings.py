@@ -30,3 +30,10 @@ DEMO_PAGE_INTRO_HTML = ""
 SECRET_KEY = '123456789'
 
 INSTALLED_APPS = ['otree']
+
+ROOMS = [
+    dict(
+        name='green_room',
+        display_name='Green Delivery Room',
+    ),
+]
