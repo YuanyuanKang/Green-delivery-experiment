@@ -1,0 +1,22 @@
+{{ block title }}
+Round {{ round_number }} / {{ total_rounds }}
+{{ endblock }}
+
+{{ block content }}
+
+<p><b>Your role: {{ my_role }}</b></p>
+<p><b>Current carbon price: k = {{ current_k }}</b></p>
+
+{{ if round_number <= 5 }}
+<p>You are now in the low carbon price stage (Rounds 1–5, where k = 2).</p>
+{{ else }}
+<p>You are now in the high carbon price stage (Rounds 6–10, where k = 10).</p>
+{{ endif }}
+
+<hr>
+
+{{ formfields }}
+
+{{ next_button }}
+
+{{ endblock }}

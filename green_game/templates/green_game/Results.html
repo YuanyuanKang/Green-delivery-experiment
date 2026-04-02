@@ -1,0 +1,35 @@
+{{ block title }}
+Round {{ round_number }} / {{ total_rounds }}
+{{ endblock }}
+
+{{ block content }}
+
+<p><b>Your role: {{ my_role }}</b></p>
+<p><b>Current carbon price: k = {{ current_k }}</b></p>
+
+{{ if round_number <= 5 }}
+<p>You are in the low carbon price stage (Rounds 1–5, where k = 2).</p>
+{{ else }}
+<p>You are in the high carbon price stage (Rounds 6–10, where k = 10).</p>
+{{ endif }}
+
+<hr>
+
+<h3>Your Decision ({{ my_role }})</h3>
+<p>Quantity (q): {{ my_q }}</p>
+<p>Emission level (g): {{ my_g }}</p>
+
+<hr>
+
+<h3>Other Player's Decision ({{ other_role }})</h3>
+<p>Quantity (q): {{ other_q }}</p>
+<p>Emission level (g): {{ other_g }}</p>
+
+<hr>
+
+<h3>Your Outcome</h3>
+<p><b>Profit: {{ profit }}</b></p>
+
+{{ next_button }}
+
+{{ endblock }}
