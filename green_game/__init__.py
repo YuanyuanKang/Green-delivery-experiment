@@ -30,6 +30,7 @@ class Player(BasePlayer):
         label="Please choose your emission level g (1–5):"
     )
 
+    emission = models.FloatField()
     revenue = models.FloatField()
     carbon = models.FloatField()
     abate_cost = models.FloatField()
@@ -45,35 +46,37 @@ def set_payoffs(group: Group):
     # Parameters
     a = 20
     k = 2 if group.round_number <= 5 else 10
-    C_quota = 20
+    c_quota = 20
     gamma0 = 5
     beta = 1
 
-    # Price function (Cournot)
-    p1_price = max(0, a - p1.q - p2.q)
-    p2_price = max(0, a - p2.q - p1.q)
+    # Common market price (same for both players)
+    price = max(0, a - p1.q - p2.q)
 
     # Emissions
-    E1 = p1.q * p1.g
-    E2 = p2.q * p2.g
+    e1 = p1.q * p1.g
+    e2 = p2.q * p2.g
 
     # Carbon cost
-    carbon1 = k * max(0, E1 - C_quota)
-    carbon2 = k * max(0, E2 - C_quota)
+    carbon1 = k * max(0, e1 - c_quota)
+    carbon2 = k * max(0, e2 - c_quota)
 
     # Abatement cost
     abate1 = beta * (gamma0 - p1.g) ** 2 * p1.q
     abate2 = beta * (gamma0 - p2.g) ** 2 * p2.q
 
     # Revenue
-    revenue1 = p1_price * p1.q
-    revenue2 = p2_price * p2.q
+    revenue1 = price * p1.q
+    revenue2 = price * p2.q
 
     # Profit
     profit1 = revenue1 - carbon1 - abate1
     profit2 = revenue2 - carbon2 - abate2
 
     # Store results
+    p1.emission = e1
+    p2.emission = e2
+
     p1.revenue = revenue1
     p2.revenue = revenue2
 
@@ -119,6 +122,7 @@ class Results(Page):
             my_g=player.g,
             other_q=other.q,
             other_g=other.g,
+            emission=player.emission,
             revenue=player.revenue,
             carbon=player.carbon,
             abate=player.abate_cost,
