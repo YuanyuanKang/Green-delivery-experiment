@@ -46,11 +46,11 @@ def set_payoffs(group: Group):
     # Parameters
     a = 20
     k = 2 if group.round_number <= 5 else 10
-    c_quota = 20
+    c_quota = 10
     gamma0 = 5
     beta = 1
 
-    # Common market price (same for both players)
+    # Common market price
     price = max(0, a - p1.q - p2.q)
 
     # Emissions
