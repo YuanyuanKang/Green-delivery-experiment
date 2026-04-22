@@ -45,7 +45,7 @@ def set_payoffs(group: Group):
 
     # Parameters
     a = 20
-    k = 2 if group.round_number <= 5 else 10
+    k = group.session.config['carbon_price']
     c_quota = 10
     gamma0 = 5
     beta = 1
@@ -96,7 +96,7 @@ class Decision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        current_k = 2 if player.round_number <= 5 else 10
+        current_k = player.session.config['carbon_price']
         return dict(
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
@@ -115,7 +115,7 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         other = player.get_others_in_group()[0]
-        current_k = 2 if player.round_number <= 5 else 10
+        current_k = player.session.config['carbon_price']
 
         return dict(
             my_q=player.q,
