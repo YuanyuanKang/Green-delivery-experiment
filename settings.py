@@ -2,10 +2,18 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='green_game',
-        display_name='Green Delivery Game',
+        name='green_low',
+        display_name='Green Delivery Game - Low Carbon Price',
         num_demo_participants=2,
         app_sequence=['green_game'],
+        carbon_price=2,
+    ),
+    dict(
+        name='green_high',
+        display_name='Green Delivery Game - High Carbon Price',
+        num_demo_participants=2,
+        app_sequence=['green_game'],
+        carbon_price=10,
     ),
 ]
 
@@ -33,7 +41,11 @@ INSTALLED_APPS = ['otree']
 
 ROOMS = [
     dict(
-        name='green_room',
-        display_name='Green Delivery Room',
+        name='green_room_low',
+        display_name='Green Delivery Room - Low Carbon Price',
+    ),
+    dict(
+        name='green_room_high',
+        display_name='Green Delivery Room - High Carbon Price',
     ),
 ]
