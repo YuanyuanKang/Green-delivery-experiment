@@ -7,11 +7,9 @@ Round {{ round_number }} / {{ total_rounds }}
 <p><b>Your role: {{ my_role }}</b></p>
 <p><b>Current carbon price: k = {{ current_k }}</b></p>
 
-{{ if round_number <= 5 }}
-    <p>You are in the low carbon price stage (Rounds 1–5, where k = 2).</p>
-{{ else }}
-    <p>You are in the high carbon price stage (Rounds 6–10, where k = 10).</p>
-{{ endif }}
+<p>
+The carbon price remains the same throughout all rounds in this session.
+</p>
 
 <hr>
 
