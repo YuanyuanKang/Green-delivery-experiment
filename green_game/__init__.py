@@ -44,11 +44,11 @@ def set_payoffs(group: Group):
     p1, p2 = group.get_players()
 
     # Parameters
-    a = 20
-    k = group.session.config['carbon_price']
-    c_quota = 10
-    gamma0 = 5
-    beta = 1
+    a = 40                       # market size
+    k = group.session.config['carbon_price']   # carbon price from session config
+    c_quota = 10                 # free emission quota
+    gamma0 = 5                   # baseline emission intensity
+    beta = 0.1                   # abatement cost coefficient
 
     # Common market price
     price = max(0, a - p1.q - p2.q)
