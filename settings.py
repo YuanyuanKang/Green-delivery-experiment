@@ -6,14 +6,14 @@ SESSION_CONFIGS = [
         display_name='Green Delivery Game - Low Carbon Price',
         num_demo_participants=2,
         app_sequence=['green_game'],
-        carbon_price=2,
+        carbon_price=1,
     ),
     dict(
         name='green_high',
         display_name='Green Delivery Game - High Carbon Price',
         num_demo_participants=2,
         app_sequence=['green_game'],
-        carbon_price=10,
+        carbon_price=3,
     ),
 ]
 
