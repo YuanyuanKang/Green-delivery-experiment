@@ -5,11 +5,25 @@ Round {{ round_number }} / {{ total_rounds }}
 {{ block content }}
 
 <p><b>Your role: {{ my_role }}</b></p>
+
+<hr>
+
+<h4>Policy setting</h4>
 <p><b>Current carbon price: k = {{ current_k }}</b></p>
+<p>The carbon price stays constant throughout this session. You will face the same carbon price in all 10 rounds.</p>
+
+<hr>
+
+<h4>Decision task</h4>
+<p>Please choose:</p>
+<ul>
+    <li><b>Production quantity q</b>: from 0 to 15</li>
+    <li><b>Emission level g</b>: from 1 to 5</li>
+</ul>
 
 <p>
-The carbon price stays constant throughout this session.
-You will face the same carbon price in all 10 rounds.
+A higher emission level means more emissions. A lower emission level may reduce carbon cost,
+but it may also involve higher abatement cost.
 </p>
 
 <hr>
