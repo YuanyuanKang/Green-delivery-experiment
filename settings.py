@@ -3,17 +3,17 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='green_low',
-        display_name='Green Delivery Game - Low Carbon Price',
+        display_name='Green Game - Low Carbon Price (k=2)',
         num_demo_participants=2,
         app_sequence=['green_game'],
-        carbon_price=1,
+        carbon_price=2,
     ),
     dict(
         name='green_high',
-        display_name='Green Delivery Game - High Carbon Price',
+        display_name='Green Game - High Carbon Price (k=10)',
         num_demo_participants=2,
         app_sequence=['green_game'],
-        carbon_price=3,
+        carbon_price=10,
     ),
 ]
 
@@ -31,21 +31,23 @@ REAL_WORLD_CURRENCY_CODE = 'USD'
 USE_POINTS = True
 
 ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD', 'admin')
 
 DEMO_PAGE_INTRO_HTML = ""
 
-SECRET_KEY = '123456789'
+SECRET_KEY = environ.get('OTREE_SECRET_KEY', '123456789')
 
 INSTALLED_APPS = ['otree']
 
 ROOMS = [
     dict(
         name='green_room_low',
-        display_name='Green Delivery Room - Low Carbon Price',
+        display_name='Green Room - Low Carbon Price (k=2)',
+        participant_label_file='_rooms/green_room_low.txt',
     ),
     dict(
         name='green_room_high',
-        display_name='Green Delivery Room - High Carbon Price',
+        display_name='Green Room - High Carbon Price (k=10)',
+        participant_label_file='_rooms/green_room_high.txt',
     ),
 ]
