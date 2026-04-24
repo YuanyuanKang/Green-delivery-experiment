@@ -1,12 +1,20 @@
 from otree.api import *
 
-doc = ""
+doc = """
+Two-player emission and production decision game.
+"""
 
 
 class C(BaseConstants):
     NAME_IN_URL = 'green_game'
     PLAYERS_PER_GROUP = 2
     NUM_ROUNDS = 10
+
+    # Final calibrated parameters
+    a = 40
+    c_quota = 47
+    gamma0 = 5
+    beta = 0.6
 
 
 class Subsession(BaseSubsession):
@@ -30,6 +38,7 @@ class Player(BasePlayer):
         label="Please choose your emission level g (1–5):"
     )
 
+    price = models.FloatField()
     emission = models.FloatField()
     revenue = models.FloatField()
     carbon = models.FloatField()
@@ -44,11 +53,11 @@ def set_payoffs(group: Group):
     p1, p2 = group.get_players()
 
     # Parameters
-    a = 40                       # market size
-    k = group.session.config['carbon_price']   # carbon price from session config
-    c_quota = 10                 # free emission quota
-    gamma0 = 5                   # baseline emission intensity
-    beta = 0.1                   # abatement cost coefficient
+    a = C.a
+    k = group.session.config['carbon_price']
+    c_quota = C.c_quota
+    gamma0 = C.gamma0
+    beta = C.beta
 
     # Common market price
     price = max(0, a - p1.q - p2.q)
@@ -57,7 +66,7 @@ def set_payoffs(group: Group):
     e1 = p1.q * p1.g
     e2 = p2.q * p2.g
 
-    # Carbon cost
+    # Carbon cost: only emissions above the quota are penalised
     carbon1 = k * max(0, e1 - c_quota)
     carbon2 = k * max(0, e2 - c_quota)
 
@@ -73,20 +82,20 @@ def set_payoffs(group: Group):
     profit1 = revenue1 - carbon1 - abate1
     profit2 = revenue2 - carbon2 - abate2
 
-    # Store results
+    # Store results for Player 1
+    p1.price = price
     p1.emission = e1
-    p2.emission = e2
-
     p1.revenue = revenue1
-    p2.revenue = revenue2
-
     p1.carbon = carbon1
-    p2.carbon = carbon2
-
     p1.abate_cost = abate1
-    p2.abate_cost = abate2
-
     p1.profit = profit1
+
+    # Store results for Player 2
+    p2.price = price
+    p2.emission = e2
+    p2.revenue = revenue2
+    p2.carbon = carbon2
+    p2.abate_cost = abate2
     p2.profit = profit2
 
 
@@ -102,6 +111,9 @@ class Decision(Page):
             total_rounds=C.NUM_ROUNDS,
             current_k=current_k,
             my_role=player.role(),
+            c_quota=C.c_quota,
+            gamma0=C.gamma0,
+            beta=C.beta,
         )
 
 
@@ -122,6 +134,7 @@ class Results(Page):
             my_g=player.g,
             other_q=other.q,
             other_g=other.g,
+            price=player.price,
             emission=player.emission,
             revenue=player.revenue,
             carbon=player.carbon,
@@ -132,6 +145,9 @@ class Results(Page):
             current_k=current_k,
             my_role=player.role(),
             other_role=other.role(),
+            c_quota=C.c_quota,
+            gamma0=C.gamma0,
+            beta=C.beta,
         )
 
 
