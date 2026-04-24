@@ -5,32 +5,45 @@ Round {{ round_number }} / {{ total_rounds }}
 {{ block content }}
 
 <p><b>Your role: {{ my_role }}</b></p>
-<p><b>Current carbon price: k = {{ current_k }}</b></p>
-
-<p>
-The carbon price remains the same throughout all rounds in this session.
-</p>
 
 <hr>
 
-<h3>Your Decision ({{ my_role }})</h3>
+<h4>Policy setting</h4>
+<p><b>Carbon price: k = {{ current_k }}</b></p>
+<p>The carbon price remains the same throughout all rounds in this session.</p>
+
+<hr>
+
+<h4>Your decision</h4>
 <p>Quantity (q): {{ my_q }}</p>
 <p>Emission level (g): {{ my_g }}</p>
 
 <hr>
 
-<h3>Other Player's Decision ({{ other_role }})</h3>
+<h4>Other player's decision</h4>
 <p>Quantity (q): {{ other_q }}</p>
 <p>Emission level (g): {{ other_g }}</p>
 
 <hr>
 
-<h3>Your Outcome</h3>
-<p>Emission: {{ emission }}</p>
-<p>Revenue: {{ revenue }}</p>
-<p>Carbon cost: {{ carbon }}</p>
-<p>Abatement cost: {{ abate }}</p>
-<p><b>Profit: {{ profit }}</b></p>
+<h4>Market outcome</h4>
+<p>Market price: {{ price }}</p>
+
+<hr>
+
+<h4>Your outcome</h4>
+<ul>
+    <li>Emission: {{ emission }}</li>
+    <li>Revenue: {{ revenue }}</li>
+    <li>Carbon cost: {{ carbon }}</li>
+    <li>Abatement cost: {{ abate }}</li>
+</ul>
+
+<p><b>Your profit: {{ profit }}</b></p>
+
+<hr>
+
+<p>Please review the outcome and proceed to the next round.</p>
 
 {{ next_button }}
 
