@@ -9,20 +9,44 @@ Round {{ round_number }} / {{ total_rounds }}
 <hr>
 
 <h4>Policy setting</h4>
+
 <p><b>Current carbon price: k = {{ current_k }}</b></p>
-<p>The carbon price stays constant throughout this session. You will face the same carbon price in all 10 rounds.</p>
+
+<p>
+The carbon price stays constant throughout this session.
+You will face the same carbon price in all 10 rounds.
+</p>
+
+<p>
+Under the cap-and-trade mechanism:
+</p>
+
+<ul>
+    <li>If your emissions are below the quota, you can earn money by selling unused allowances.</li>
+    <li>If your emissions exceed the quota, you must pay to buy additional allowances.</li>
+</ul>
+
+<p><b>Emission quota: C = {{ c_quota }}</b></p>
 
 <hr>
 
 <h4>Decision task</h4>
+
 <p>Please choose:</p>
+
 <ul>
-    <li><b>Production quantity q</b>: from 0 to 15</li>
-    <li><b>Emission level g</b>: from 1 to 5</li>
+    <li><b>Production quantity (q)</b>: from 0 to 15</li>
+    <li><b>Emission level (g)</b>: from 1 to 5</li>
 </ul>
 
 <p>
-A higher emission level means more emissions. A lower emission level may reduce carbon cost,
+A higher production quantity may increase your revenue,
+but it may also increase market competition and emissions.
+</p>
+
+<p>
+A higher emission level means more emissions.
+A lower emission level may reduce emissions and increase carbon trading revenue,
 but it may also involve higher abatement cost.
 </p>
 
