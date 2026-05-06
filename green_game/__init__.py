@@ -1,7 +1,7 @@
 from otree.api import *
 
 doc = """
-Two-player emission and production decision game.
+Two-player emission and production decision game with a simplified cap-and-trade mechanism.
 """
 
 
@@ -41,7 +41,12 @@ class Player(BasePlayer):
     price = models.FloatField()
     emission = models.FloatField()
     revenue = models.FloatField()
+
+    # In the new version, this is carbon trading payoff:
+    # positive = revenue from selling unused allowances
+    # negative = cost of buying additional allowances
     carbon = models.FloatField()
+
     abate_cost = models.FloatField()
     profit = models.FloatField()
 
@@ -66,9 +71,11 @@ def set_payoffs(group: Group):
     e1 = p1.q * p1.g
     e2 = p2.q * p2.g
 
-    # Carbon cost: only emissions above the quota are penalised
-    carbon1 = k * max(0, e1 - c_quota)
-    carbon2 = k * max(0, e2 - c_quota)
+    # Carbon trading payoff under simplified cap-and-trade:
+    # If E < C, C - E > 0, the player earns money from selling unused allowances.
+    # If E > C, C - E < 0, the player pays to buy additional allowances.
+    carbon1 = k * (c_quota - e1)
+    carbon2 = k * (c_quota - e2)
 
     # Abatement cost
     abate1 = beta * (gamma0 - p1.g) ** 2 * p1.q
@@ -79,8 +86,8 @@ def set_payoffs(group: Group):
     revenue2 = price * p2.q
 
     # Profit
-    profit1 = revenue1 - carbon1 - abate1
-    profit2 = revenue2 - carbon2 - abate2
+    profit1 = revenue1 + carbon1 - abate1
+    profit2 = revenue2 + carbon2 - abate2
 
     # Store results for Player 1
     p1.price = price
