@@ -3,14 +3,14 @@ from os import environ
 SESSION_CONFIGS = [
     dict(
         name='green_low',
-        display_name='Green Game - Low Carbon Price (k=2)',
+        display_name='Green Game - Cap-and-Trade (k=2)',
         num_demo_participants=2,
         app_sequence=['green_game'],
         carbon_price=2,
     ),
     dict(
         name='green_high',
-        display_name='Green Game - High Carbon Price (k=10)',
+        display_name='Green Game - Cap-and-Trade (k=10)',
         num_demo_participants=2,
         app_sequence=['green_game'],
         carbon_price=10,
@@ -42,12 +42,12 @@ INSTALLED_APPS = ['otree']
 ROOMS = [
     dict(
         name='green_room_low',
-        display_name='Green Room - Low Carbon Price (k=2)',
+        display_name='Green Room - Cap-and-Trade (k=2)',
         participant_label_file='_rooms/green_room_low.txt',
     ),
     dict(
         name='green_room_high',
-        display_name='Green Room - High Carbon Price (k=10)',
+        display_name='Green Room - Cap-and-Trade (k=10)',
         participant_label_file='_rooms/green_room_high.txt',
     ),
 ]
