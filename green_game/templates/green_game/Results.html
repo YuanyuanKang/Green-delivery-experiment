@@ -11,6 +11,10 @@ Round {{ round_number }} / {{ total_rounds }}
 <h4>Policy setting</h4>
 <p><b>Carbon price: k = {{ current_k }}</b></p>
 <p>The carbon price remains the same throughout all rounds in this session.</p>
+<p>
+    Under the cap-and-trade mechanism, if your emissions are below the quota, you earn money by selling unused allowances.
+    If your emissions exceed the quota, you pay to buy additional allowances.
+</p>
 
 <hr>
 
@@ -35,9 +39,14 @@ Round {{ round_number }} / {{ total_rounds }}
 <ul>
     <li>Emission: {{ emission }}</li>
     <li>Revenue: {{ revenue }}</li>
-    <li>Carbon cost: {{ carbon }}</li>
+    <li>Carbon trading payoff: {{ carbon }}</li>
     <li>Abatement cost: {{ abate }}</li>
 </ul>
+
+<p>
+    <b>Note:</b> A positive carbon trading payoff means you earned money by selling unused allowances.
+    A negative value means you paid to buy additional allowances.
+</p>
 
 <p><b>Your profit: {{ profit }}</b></p>
 
