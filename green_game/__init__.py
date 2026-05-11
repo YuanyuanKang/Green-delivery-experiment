@@ -16,6 +16,9 @@ class C(BaseConstants):
     gamma0 = 5
     beta = 0.6
 
+    # Carbon price
+    carbon_price = 15
+
 
 class Subsession(BaseSubsession):
     pass
@@ -41,12 +44,7 @@ class Player(BasePlayer):
     price = models.FloatField()
     emission = models.FloatField()
     revenue = models.FloatField()
-
-    # In the new version, this is carbon trading payoff:
-    # positive = revenue from selling unused allowances
-    # negative = cost of buying additional allowances
     carbon = models.FloatField()
-
     abate_cost = models.FloatField()
     profit = models.FloatField()
 
@@ -57,39 +55,29 @@ class Player(BasePlayer):
 def set_payoffs(group: Group):
     p1, p2 = group.get_players()
 
-    # Parameters
     a = C.a
-    k = group.session.config['carbon_price']
+    k = C.carbon_price
     c_quota = C.c_quota
     gamma0 = C.gamma0
     beta = C.beta
 
-    # Common market price
     price = max(0, a - p1.q - p2.q)
 
-    # Emissions
     e1 = p1.q * p1.g
     e2 = p2.q * p2.g
 
-    # Carbon trading payoff under simplified cap-and-trade:
-    # If E < C, C - E > 0, the player earns money from selling unused allowances.
-    # If E > C, C - E < 0, the player pays to buy additional allowances.
     carbon1 = k * (c_quota - e1)
     carbon2 = k * (c_quota - e2)
 
-    # Abatement cost
     abate1 = beta * (gamma0 - p1.g) ** 2 * p1.q
     abate2 = beta * (gamma0 - p2.g) ** 2 * p2.q
 
-    # Revenue
     revenue1 = price * p1.q
     revenue2 = price * p2.q
 
-    # Profit
     profit1 = revenue1 + carbon1 - abate1
     profit2 = revenue2 + carbon2 - abate2
 
-    # Store results for Player 1
     p1.price = price
     p1.emission = e1
     p1.revenue = revenue1
@@ -97,7 +85,6 @@ def set_payoffs(group: Group):
     p1.abate_cost = abate1
     p1.profit = profit1
 
-    # Store results for Player 2
     p2.price = price
     p2.emission = e2
     p2.revenue = revenue2
@@ -112,11 +99,10 @@ class Decision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        current_k = player.session.config['carbon_price']
         return dict(
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
-            current_k=current_k,
+            current_k=C.carbon_price,
             my_role=player.role(),
             c_quota=C.c_quota,
             gamma0=C.gamma0,
@@ -134,7 +120,6 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         other = player.get_others_in_group()[0]
-        current_k = player.session.config['carbon_price']
 
         return dict(
             my_q=player.q,
@@ -149,7 +134,7 @@ class Results(Page):
             profit=player.profit,
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
-            current_k=current_k,
+            current_k=C.carbon_price,
             my_role=player.role(),
             other_role=other.role(),
             c_quota=C.c_quota,
