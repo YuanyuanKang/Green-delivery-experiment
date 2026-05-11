@@ -10,10 +10,10 @@ SESSION_CONFIGS = [
     ),
     dict(
         name='green_high',
-        display_name='Green Game - Cap-and-Trade (k=10)',
+        display_name='Green Game - Cap-and-Trade (k=15)',
         num_demo_participants=2,
         app_sequence=['green_game'],
-        carbon_price=10,
+        carbon_price=15,
     ),
 ]
 
@@ -47,7 +47,7 @@ ROOMS = [
     ),
     dict(
         name='green_room_high',
-        display_name='Green Room - Cap-and-Trade (k=10)',
+        display_name='Green Room - Cap-and-Trade (k=15)',
         participant_label_file='_rooms/green_room_high.txt',
     ),
 ]
