@@ -16,9 +16,6 @@ class C(BaseConstants):
     gamma0 = 5
     beta = 0.6
 
-    # Carbon price
-    carbon_price = 15
-
 
 class Subsession(BaseSubsession):
     pass
@@ -56,7 +53,7 @@ def set_payoffs(group: Group):
     p1, p2 = group.get_players()
 
     a = C.a
-    k = C.carbon_price
+    k = group.session.config['carbon_price']
     c_quota = C.c_quota
     gamma0 = C.gamma0
     beta = C.beta
@@ -99,10 +96,11 @@ class Decision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
+        current_k = player.session.config['carbon_price']
         return dict(
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
-            current_k=C.carbon_price,
+            current_k=current_k,
             my_role=player.role(),
             c_quota=C.c_quota,
             gamma0=C.gamma0,
@@ -120,6 +118,7 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         other = player.get_others_in_group()[0]
+        current_k = player.session.config['carbon_price']
 
         return dict(
             my_q=player.q,
@@ -134,7 +133,7 @@ class Results(Page):
             profit=player.profit,
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
-            current_k=C.carbon_price,
+            current_k=current_k,
             my_role=player.role(),
             other_role=other.role(),
             c_quota=C.c_quota,
