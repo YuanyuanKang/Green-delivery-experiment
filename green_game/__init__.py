@@ -1,7 +1,7 @@
 from otree.api import *
 
 doc = """
-Two-player emission and production decision game with a simplified cap-and-trade mechanism.
+Two-player emission and production decision game with random matching and a simplified cap-and-trade mechanism.
 """
 
 
@@ -15,6 +15,9 @@ class C(BaseConstants):
     c_quota = 47
     gamma0 = 5
     beta = 0.6
+
+    LOW_K = 2
+    HIGH_K = 10
 
 
 class Subsession(BaseSubsession):
@@ -38,6 +41,8 @@ class Player(BasePlayer):
         label="Please choose your emission level g (1–5):"
     )
 
+    carbon_price = models.FloatField()
+
     price = models.FloatField()
     emission = models.FloatField()
     revenue = models.FloatField()
@@ -49,11 +54,23 @@ class Player(BasePlayer):
         return f"Manufacturer {self.id_in_group}"
 
 
+def creating_session(subsession: Subsession):
+    # Randomly rematch participants in every round
+    subsession.group_randomly()
+
+    # Rounds 1–5: low carbon price; Rounds 6–10: high carbon price
+    for player in subsession.get_players():
+        if subsession.round_number <= 5:
+            player.carbon_price = C.LOW_K
+        else:
+            player.carbon_price = C.HIGH_K
+
+
 def set_payoffs(group: Group):
     p1, p2 = group.get_players()
 
     a = C.a
-    k = group.session.config['carbon_price']
+    k = p1.carbon_price
     c_quota = C.c_quota
     gamma0 = C.gamma0
     beta = C.beta
@@ -96,7 +113,7 @@ class Decision(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        current_k = player.session.config['carbon_price']
+        current_k = player.carbon_price
         return dict(
             round_number=player.round_number,
             total_rounds=C.NUM_ROUNDS,
@@ -118,7 +135,7 @@ class Results(Page):
     @staticmethod
     def vars_for_template(player: Player):
         other = player.get_others_in_group()[0]
-        current_k = player.session.config['carbon_price']
+        current_k = player.carbon_price
 
         return dict(
             my_q=player.q,
