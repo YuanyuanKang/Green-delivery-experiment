@@ -5,15 +5,26 @@ Round {{ round_number }} / {{ total_rounds }}
 {{ block content }}
 
 <p><b>Your role: {{ my_role }}</b></p>
+<p><b>Your matched opponent in this round: {{ other_role }}</b></p>
 
 <hr>
 
 <h4>Policy setting</h4>
-<p><b>Carbon price: k = {{ current_k }}</b></p>
-<p>The carbon price remains the same throughout all rounds in this session.</p>
+
+<p><b>Current carbon price: k = {{ current_k }}</b></p>
+
+<ul>
+    <li>Rounds 1–5: low carbon price, k = 2</li>
+    <li>Rounds 6–10: high carbon price, k = 10</li>
+</ul>
+
 <p>
-    Under the cap-and-trade mechanism, if your emissions are below the quota, you earn money by selling unused allowances.
-    If your emissions exceed the quota, you pay to buy additional allowances.
+In each round, you are randomly matched with one other participant from the participant pool.
+</p>
+
+<p>
+Under the cap-and-trade mechanism, if your emissions are below the quota, you earn money by selling unused allowances.
+If your emissions exceed the quota, you pay to buy additional allowances.
 </p>
 
 <hr>
@@ -24,7 +35,7 @@ Round {{ round_number }} / {{ total_rounds }}
 
 <hr>
 
-<h4>Other player's decision</h4>
+<h4>Matched opponent's decision</h4>
 <p>Quantity (q): {{ other_q }}</p>
 <p>Emission level (g): {{ other_g }}</p>
 
