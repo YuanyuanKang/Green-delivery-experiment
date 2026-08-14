@@ -2,6 +2,7 @@
 {{ round_label }}
 {{ endblock }}
 
+
 {{ block content }}
 
 {% if is_practice %}
@@ -10,6 +11,7 @@
     This round is for practice only and does not count toward your formal experimental payoff.
 </div>
 {% endif %}
+
 
 <h4>Current market conditions</h4>
 
@@ -31,36 +33,50 @@
     </tr>
 </table>
 
+
 <hr>
+
 
 <h4>Your decision</h4>
 
 <p>
-You are the operations manager of an e-commerce platform providing ultra-fast delivery.
-Your platform is competing with another platform for the market orders available in this round.
+    You are the operations manager of an e-commerce platform providing ultra-fast delivery.
+    Your platform is competing with another platform for the market orders available in this round.
 </p>
 
 <p>
-Choose your platform's <b>Fulfilment Resource Commitment (FRC)</b> for this operating period.
+    Choose your platform's
+    <b>Fulfilment Resource Commitment (FRC)</b>
+    for this operating period.
 </p>
 
 <p>
-A higher FRC provides greater fulfilment capacity and may improve delivery performance,
-but it also creates higher fulfilment costs and environmental impact.
+    A higher FRC may improve delivery performance,
+    but it also creates a higher fulfilment cost.
 </p>
 
 <p>
-You will <b>not</b> see your competitor's current FRC choice before submitting your own decision.
+    You will <b>not</b> see your competitor's current FRC choice
+    before submitting your own decision.
 </p>
+
 
 {{ formfield 'frc' }}
 
+
 <br>
 
+
 <details>
+
     <summary><b>View decision rules</b></summary>
 
     <br>
+
+
+    <!-- ===================================================== -->
+    <!-- 1. FRC COST                                           -->
+    <!-- ===================================================== -->
 
     <h5>1. FRC and Fulfilment Cost</h5>
 
@@ -71,15 +87,18 @@ You will <b>not</b> see your competitor's current FRC choice before submitting y
                 <th>Fulfilment Cost</th>
             </tr>
         </thead>
+
         <tbody>
             <tr>
                 <td>Low</td>
                 <td>{{ frc_cost_low }} points</td>
             </tr>
+
             <tr>
                 <td>Medium</td>
                 <td>{{ frc_cost_medium }} points</td>
             </tr>
+
             <tr>
                 <td>High</td>
                 <td>{{ frc_cost_high }} points</td>
@@ -87,37 +106,141 @@ You will <b>not</b> see your competitor's current FRC choice before submitting y
         </tbody>
     </table>
 
-    <h5>2. Revenue</h5>
+
+    <!-- ===================================================== -->
+    <!-- 2. DELIVERY PERFORMANCE                               -->
+    <!-- ===================================================== -->
+
+    <h5>2. Delivery Performance</h5>
 
     <p>
-        Each fulfilled order generates
-        <b>{{ revenue_per_order }} revenue point</b>.
+        Delivery performance under the
+        <b>current market demand</b>:
     </p>
 
-    <h5>3. Environmental Impact</h5>
+
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>FRC</th>
+                <th>Delivery Performance</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% if demand_state == 'Low' %}
+
+            <tr>
+                <td>Low</td>
+                <td>90</td>
+            </tr>
+
+            <tr>
+                <td>Medium</td>
+                <td>96</td>
+            </tr>
+
+            <tr>
+                <td>High</td>
+                <td>99</td>
+            </tr>
+
+
+            {% elif demand_state == 'Medium' %}
+
+            <tr>
+                <td>Low</td>
+                <td>80</td>
+            </tr>
+
+            <tr>
+                <td>Medium</td>
+                <td>90</td>
+            </tr>
+
+            <tr>
+                <td>High</td>
+                <td>96</td>
+            </tr>
+
+
+            {% elif demand_state == 'High' %}
+
+            <tr>
+                <td>Low</td>
+                <td>70</td>
+            </tr>
+
+            <tr>
+                <td>Medium</td>
+                <td>80</td>
+            </tr>
+
+            <tr>
+                <td>High</td>
+                <td>90</td>
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+    </table>
+
+
+    <!-- ===================================================== -->
+    <!-- 3. CUSTOMER ALLOCATION                                -->
+    <!-- ===================================================== -->
+
+    <h5>3. Customer Allocation</h5>
 
     <p>
-        Your environmental impact has two components:
+        Market share depends on the difference between
+        your delivery performance and your competitor's delivery performance.
     </p>
 
-    <ul>
-        <li>
-            Base environmental impact associated with your chosen FRC:
-            Low = {{ base_emission_low }},
-            Medium = {{ base_emission_medium }},
-            High = {{ base_emission_high }}
-        </li>
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>Delivery Performance Difference</th>
+                <th>Market Share</th>
+            </tr>
+        </thead>
 
-        <li>
-            Each fulfilled order generates an additional
-            {{ emission_per_order }} environmental impact units.
-        </li>
-    </ul>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>50 / 50</td>
+            </tr>
+
+            <tr>
+                <td>1–5</td>
+                <td>52 / 48</td>
+            </tr>
+
+            <tr>
+                <td>6–10</td>
+                <td>55 / 45</td>
+            </tr>
+
+            <tr>
+                <td>11–20</td>
+                <td>58 / 42</td>
+            </tr>
+        </tbody>
+    </table>
 
     <p>
-        The current Carbon Price is applied to your total environmental impact
-        to determine your Carbon Cost.
+        <b>
+            The platform with the higher delivery performance
+            receives the larger market share.
+        </b>
     </p>
+
+
+    <!-- ===================================================== -->
+    <!-- 4. PROFIT                                             -->
+    <!-- ===================================================== -->
 
     <h5>4. Profit</h5>
 
@@ -127,19 +250,14 @@ You will <b>not</b> see your competitor's current FRC choice before submitting y
         </b>
     </p>
 
-    <p>
-        Your objective is to maximise your platform's profit points.
-    </p>
-
-    <p>
-        All calculations are performed automatically by the system.
-        You do not need to calculate the outcomes manually.
-    </p>
 
 </details>
 
+
 <hr>
 
+
 {{ next_button }}
+
 
 {{ endblock }}
