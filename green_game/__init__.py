@@ -75,7 +75,7 @@ class Group(BaseGroup):
 class Player(BasePlayer):
 
     # Experimental structure
-    participant_id = models.IntegerField()
+    # --------------------------------------------------------
 
     sequence = models.StringField()
     # A = Low CP -> High CP
@@ -494,12 +494,10 @@ def creating_session(subsession: Subsession):
     players = subsession.get_players()
 
     # --------------------------------------------------------
-    # 1. FIXED COUNTERBALANCED SEQUENCE
+    # 1. Fixed counterbalanced sequence assignment
     # --------------------------------------------------------
-    #
-    # Sequence A/B is assigned ONCE in round 1.
-    # The same sequence is then retained for all 20 rounds.
-    #
+    # Sequence A/B is assigned once in Round 1 and then
+    # retained for the same participant throughout all rounds.
 
     if subsession.round_number == 1:
 
@@ -516,10 +514,6 @@ def creating_session(subsession: Subsession):
             )
 
     for player in players:
-
-        player.participant_id = (
-            player.participant.id_in_session
-        )
 
         player.sequence = (
             player.participant.vars['frc_sequence']
