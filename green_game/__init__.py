@@ -28,55 +28,35 @@ class C(BaseConstants):
     NAME_IN_URL = 'frc_game'
     PLAYERS_PER_GROUP = 2
 
-    # 2 practice + 18 formal rounds
     NUM_PRACTICE_ROUNDS = 2
     NUM_FORMAL_ROUNDS = 18
     NUM_ROUNDS = 20
 
-    # Each formal carbon block contains 9 rounds
     FORMAL_ROUNDS_PER_BLOCK = 9
 
-    # --------------------------------------------------------
-    # Demand parameters
-    # --------------------------------------------------------
-
+    # Demand
     DEMAND_LOW = 800
     DEMAND_MEDIUM = 1000
     DEMAND_HIGH = 1200
 
-    # --------------------------------------------------------
     # Revenue
-    # --------------------------------------------------------
-
     REVENUE_PER_ORDER = 1
 
-    # --------------------------------------------------------
     # Carbon pricing
-    # --------------------------------------------------------
-
     CARBON_PRICE_LOW = 1
     CARBON_PRICE_HIGH = 4
 
-    # --------------------------------------------------------
     # Fulfilment costs
-    # --------------------------------------------------------
-
     FRC_COST_LOW = 120
     FRC_COST_MEDIUM = 150
     FRC_COST_HIGH = 180
 
-    # --------------------------------------------------------
     # Base emissions
-    # --------------------------------------------------------
-
     BASE_EMISSION_LOW = 2
     BASE_EMISSION_MEDIUM = 4
     BASE_EMISSION_HIGH = 7
 
-    # --------------------------------------------------------
     # Variable emissions
-    # --------------------------------------------------------
-
     EMISSION_PER_ORDER = 0.015
 
 
@@ -94,10 +74,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
 
-    # --------------------------------------------------------
     # Experimental structure
-    # --------------------------------------------------------
-
     participant_id = models.IntegerField()
 
     sequence = models.StringField()
@@ -106,23 +83,16 @@ class Player(BasePlayer):
 
     block = models.IntegerField()
     formal_round = models.IntegerField()
-
     is_practice = models.BooleanField()
 
-    # --------------------------------------------------------
     # Experimental conditions
-    # --------------------------------------------------------
-
     demand_state = models.StringField()
     market_demand = models.IntegerField()
 
     carbon_condition = models.StringField()
     carbon_price = models.FloatField()
 
-    # --------------------------------------------------------
-    # Player decision
-    # --------------------------------------------------------
-
+    # Decision
     frc = models.StringField(
         choices=[
             ['Low', 'Low FRC'],
@@ -133,66 +103,38 @@ class Player(BasePlayer):
         label='Choose your Fulfilment Resource Commitment (FRC):'
     )
 
-    # --------------------------------------------------------
     # Opponent information
-    # --------------------------------------------------------
-
     opponent_id = models.IntegerField()
     pair_id = models.IntegerField()
-
     opponent_frc = models.StringField()
 
-    # --------------------------------------------------------
     # Delivery performance
-    # --------------------------------------------------------
-
     delivery_performance = models.FloatField()
     opponent_delivery_performance = models.FloatField()
-
     performance_difference = models.FloatField()
 
-    # --------------------------------------------------------
     # Market outcome
-    # --------------------------------------------------------
-
     market_share = models.FloatField()
     orders_received = models.IntegerField()
 
-    # --------------------------------------------------------
     # Economic outcome
-    # --------------------------------------------------------
-
     revenue = models.FloatField()
     fulfilment_cost = models.FloatField()
 
-    # --------------------------------------------------------
     # Environmental outcome
-    # --------------------------------------------------------
-
     base_emission = models.FloatField()
     order_emission = models.FloatField()
     total_emission = models.FloatField()
-
     carbon_cost = models.FloatField()
 
-    # --------------------------------------------------------
     # Final outcome
-    # --------------------------------------------------------
-
     profit = models.FloatField()
 
-    # --------------------------------------------------------
-    # Decision-time measurement
-    # --------------------------------------------------------
-
+    # Decision time
     decision_started_at = models.FloatField()
     decision_time = models.FloatField()
 
-    # --------------------------------------------------------
     # Comprehension check
-    # Only used before round 1
-    # --------------------------------------------------------
-
     check_objective = models.StringField(
         choices=[
             ['profit', 'Maximise my platform profit'],
@@ -210,13 +152,19 @@ class Player(BasePlayer):
             ['no', 'No'],
         ],
         widget=widgets.RadioSelect,
-        label='When choosing your FRC, can you see the competitor’s current FRC choice?'
+        label=(
+            'When choosing your FRC, can you see the competitor’s '
+            'current FRC choice?'
+        )
     )
 
     check_high_frc = models.StringField(
         choices=[
             ['always', 'Yes, High FRC always gives the highest profit'],
-            ['tradeoff', 'No, higher FRC can improve delivery performance but also costs more'],
+            [
+                'tradeoff',
+                'No, higher FRC can improve delivery performance but also costs more'
+            ],
         ],
         widget=widgets.RadioSelect,
         label='Does choosing High FRC always give the highest profit?'
@@ -224,18 +172,36 @@ class Player(BasePlayer):
 
     check_delivery = models.StringField(
         choices=[
-            ['more_orders', 'The better-performing platform receives a larger share of market orders'],
-            ['no_effect', 'Delivery performance does not affect market allocation'],
+            [
+                'more_orders',
+                'The better-performing platform receives a larger share of market orders'
+            ],
+            [
+                'no_effect',
+                'Delivery performance does not affect market allocation'
+            ],
         ],
         widget=widgets.RadioSelect,
-        label='What happens if one platform has better delivery performance than the other?'
+        label=(
+            'What happens if one platform has better delivery performance '
+            'than the other?'
+        )
     )
 
     check_carbon = models.StringField(
         choices=[
-            ['reduces_profit', 'Carbon Cost is deducted when profit is calculated'],
-            ['increases_profit', 'Carbon Cost increases profit'],
-            ['irrelevant', 'Carbon Cost has no effect on profit'],
+            [
+                'reduces_profit',
+                'Carbon Cost is deducted when profit is calculated'
+            ],
+            [
+                'increases_profit',
+                'Carbon Cost increases profit'
+            ],
+            [
+                'irrelevant',
+                'Carbon Cost has no effect on profit'
+            ],
         ],
         widget=widgets.RadioSelect,
         label='How does Carbon Cost affect your platform profit?'
@@ -254,56 +220,47 @@ class Player(BasePlayer):
 # ============================================================
 
 def demand_value(demand_state):
-
     values = {
         'Low': C.DEMAND_LOW,
         'Medium': C.DEMAND_MEDIUM,
         'High': C.DEMAND_HIGH,
     }
-
     return values[demand_state]
 
 
 def carbon_price_value(condition):
-
     values = {
         'Low': C.CARBON_PRICE_LOW,
         'High': C.CARBON_PRICE_HIGH,
     }
-
     return values[condition]
 
 
 def frc_cost(frc):
-
     values = {
         'Low': C.FRC_COST_LOW,
         'Medium': C.FRC_COST_MEDIUM,
         'High': C.FRC_COST_HIGH,
     }
-
     return values[frc]
 
 
 def base_emission_value(frc):
-
     values = {
         'Low': C.BASE_EMISSION_LOW,
         'Medium': C.BASE_EMISSION_MEDIUM,
         'High': C.BASE_EMISSION_HIGH,
     }
-
     return values[frc]
 
 
 # ============================================================
-# DELIVERY PERFORMANCE MATRIX
+# DELIVERY PERFORMANCE
 # ============================================================
 
 def get_delivery_performance(demand_state, frc):
 
     matrix = {
-
         'Low': {
             'Low': 90,
             'Medium': 96,
@@ -327,7 +284,7 @@ def get_delivery_performance(demand_state, frc):
 
 
 # ============================================================
-# CUSTOMER ALLOCATION RULE
+# CUSTOMER ALLOCATION
 # ============================================================
 
 def better_platform_share(dp_difference):
@@ -344,7 +301,6 @@ def better_platform_share(dp_difference):
     if 11 <= dp_difference <= 20:
         return 0.58
 
-    # This should never occur under the current DP matrix.
     raise ValueError(
         f'Unexpected Delivery Performance difference: {dp_difference}'
     )
@@ -357,12 +313,10 @@ def better_platform_share(dp_difference):
 def get_demand_schedule(session_code, block_number):
 
     """
-    Each 9-round formal block contains exactly:
-    - 3 Low Demand rounds
-    - 3 Medium Demand rounds
-    - 3 High Demand rounds
+    Each formal block contains exactly:
+    3 Low + 3 Medium + 3 High Demand rounds.
 
-    Order is randomised at session level.
+    The order is randomised once at session level.
     """
 
     schedule = (
@@ -387,7 +341,7 @@ def get_demand_schedule(session_code, block_number):
 def get_sequence_assignments(subsession):
 
     """
-    Randomly and evenly assigns participants to:
+    Randomly and evenly assigns participants:
 
     Sequence A:
     Low CP -> High CP
@@ -395,18 +349,17 @@ def get_sequence_assignments(subsession):
     Sequence B:
     High CP -> Low CP
 
-    Session size should be divisible by 4 so that each
-    carbon-condition pool contains an even number of players.
+    Session size must be divisible by 4 so that each
+    sequence pool contains an even number of participants.
     """
 
     players = subsession.get_players()
-
     n = len(players)
 
     if n % 4 != 0:
         raise ValueError(
             'FRC pilot requires a session size divisible by 4 '
-            '(for example 8, 12, 16, ... participants).'
+            '(for example 4, 8, 12, 16, ... participants).'
         )
 
     participant_ids = [
@@ -470,10 +423,10 @@ def make_random_pairs(
 ):
 
     """
-    Randomly pairs players.
+    Randomly pairs participants within the same sequence pool.
 
-    Where possible, the algorithm avoids matching the same
-    opponent in two consecutive rounds.
+    Where possible, avoid matching the same opponent
+    in two consecutive rounds.
     """
 
     if len(players) % 2 != 0:
@@ -487,13 +440,11 @@ def make_random_pairs(
     )
 
     original = list(players)
-
     best_pairs = None
 
     for _ in range(500):
 
         shuffled = list(original)
-
         rng.shuffle(shuffled)
 
         pairs = [
@@ -503,6 +454,7 @@ def make_random_pairs(
 
         best_pairs = pairs
 
+        # With only 2 players in a pool there is no alternative opponent.
         if not avoid_previous or len(players) < 4:
             break
 
@@ -542,12 +494,26 @@ def creating_session(subsession: Subsession):
     players = subsession.get_players()
 
     # --------------------------------------------------------
-    # 1. Counterbalanced sequence assignment
+    # 1. FIXED COUNTERBALANCED SEQUENCE
     # --------------------------------------------------------
+    #
+    # Sequence A/B is assigned ONCE in round 1.
+    # The same sequence is then retained for all 20 rounds.
+    #
 
-    sequence_assignments = get_sequence_assignments(
-        subsession
-    )
+    if subsession.round_number == 1:
+
+        sequence_assignments = get_sequence_assignments(
+            subsession
+        )
+
+        for player in players:
+
+            player.participant.vars['frc_sequence'] = (
+                sequence_assignments[
+                    player.participant.id_in_session
+                ]
+            )
 
     for player in players:
 
@@ -555,12 +521,12 @@ def creating_session(subsession: Subsession):
             player.participant.id_in_session
         )
 
-        player.sequence = sequence_assignments[
-            player.participant.id_in_session
-        ]
+        player.sequence = (
+            player.participant.vars['frc_sequence']
+        )
 
     # --------------------------------------------------------
-    # 2. Practice rounds
+    # 2. PRACTICE ROUND 1
     # --------------------------------------------------------
 
     if subsession.round_number == 1:
@@ -581,6 +547,10 @@ def creating_session(subsession: Subsession):
 
         return
 
+    # --------------------------------------------------------
+    # 3. PRACTICE ROUND 2
+    # --------------------------------------------------------
+
     if subsession.round_number == 2:
 
         for player in players:
@@ -600,7 +570,7 @@ def creating_session(subsession: Subsession):
         return
 
     # --------------------------------------------------------
-    # 3. Formal round number
+    # 4. FORMAL ROUND NUMBER
     # --------------------------------------------------------
 
     formal_round = (
@@ -609,20 +579,27 @@ def creating_session(subsession: Subsession):
     )
 
     # --------------------------------------------------------
-    # 4. Determine block
+    # 5. FORMAL BLOCK
     # --------------------------------------------------------
 
     if formal_round <= C.FORMAL_ROUNDS_PER_BLOCK:
+
         block = 1
         position_in_block = formal_round - 1
 
     else:
+
         block = 2
+
         position_in_block = (
             formal_round
             - C.FORMAL_ROUNDS_PER_BLOCK
             - 1
         )
+
+    # --------------------------------------------------------
+    # 6. DEMAND SCHEDULE
+    # --------------------------------------------------------
 
     demand_schedule = get_demand_schedule(
         subsession.session.code,
@@ -634,7 +611,7 @@ def creating_session(subsession: Subsession):
     ]
 
     # --------------------------------------------------------
-    # 5. Assign Demand + Carbon Price
+    # 7. DEMAND + CARBON CONDITION
     # --------------------------------------------------------
 
     for player in players:
@@ -644,6 +621,7 @@ def creating_session(subsession: Subsession):
         player.block = block
 
         player.demand_state = current_demand
+
         player.market_demand = demand_value(
             current_demand
         )
@@ -677,15 +655,17 @@ def creating_session(subsession: Subsession):
         )
 
     # --------------------------------------------------------
-    # 6. Anonymous random rematching
-    #
-    # Players are matched ONLY with participants currently
-    # experiencing the same Carbon Price.
-    #
-    # Because Sequence A and B have opposite carbon conditions
-    # in each formal block, matching within sequence implements
-    # same-carbon-condition matching.
+    # 8. RANDOM REMATCHING WITHIN CURRENT CP CONDITION
     # --------------------------------------------------------
+    #
+    # In each formal block:
+    #
+    # Sequence A participants share one CP condition.
+    # Sequence B participants share the opposite CP condition.
+    #
+    # Matching within sequence therefore guarantees that
+    # matched participants face the same Carbon Price.
+    #
 
     sequence_a_players = [
         p for p in players
@@ -730,8 +710,7 @@ def set_payoffs(group: Group):
 
     p1, p2 = group.get_players()
 
-    # Both competing platforms must face the same
-    # demand and carbon-pricing environment.
+    # Both competitors must face identical market conditions.
 
     if p1.market_demand != p2.market_demand:
         raise ValueError(
@@ -748,21 +727,17 @@ def set_payoffs(group: Group):
     carbon_price = p1.carbon_price
 
     # --------------------------------------------------------
-    # 1. Delivery Performance
+    # 1. DELIVERY PERFORMANCE
     # --------------------------------------------------------
 
-    p1.delivery_performance = (
-        get_delivery_performance(
-            demand_state,
-            p1.frc
-        )
+    p1.delivery_performance = get_delivery_performance(
+        demand_state,
+        p1.frc
     )
 
-    p2.delivery_performance = (
-        get_delivery_performance(
-            demand_state,
-            p2.frc
-        )
+    p2.delivery_performance = get_delivery_performance(
+        demand_state,
+        p2.frc
     )
 
     p1.opponent_delivery_performance = (
@@ -774,14 +749,14 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 2. Opponent FRC
+    # 2. OPPONENT FRC
     # --------------------------------------------------------
 
     p1.opponent_frc = p2.frc
     p2.opponent_frc = p1.frc
 
     # --------------------------------------------------------
-    # 3. Opponent ID / Pair ID
+    # 3. OPPONENT / PAIR IDs
     # --------------------------------------------------------
 
     p1.opponent_id = (
@@ -796,7 +771,7 @@ def set_payoffs(group: Group):
     p2.pair_id = group.id_in_subsession
 
     # --------------------------------------------------------
-    # 4. Delivery Performance Difference
+    # 4. PERFORMANCE DIFFERENCE
     # --------------------------------------------------------
 
     difference = abs(
@@ -808,7 +783,7 @@ def set_payoffs(group: Group):
     p2.performance_difference = difference
 
     # --------------------------------------------------------
-    # 5. Customer Allocation / Market Share
+    # 5. CUSTOMER ALLOCATION
     # --------------------------------------------------------
 
     if difference == 0:
@@ -838,7 +813,7 @@ def set_payoffs(group: Group):
             p2.market_share = winner_share
 
     # --------------------------------------------------------
-    # 6. Orders Received
+    # 6. ORDERS
     # --------------------------------------------------------
 
     p1.orders_received = int(
@@ -855,8 +830,6 @@ def set_payoffs(group: Group):
         )
     )
 
-    # Allocation integrity check
-
     if (
         p1.orders_received
         + p2.orders_received
@@ -867,7 +840,7 @@ def set_payoffs(group: Group):
         )
 
     # --------------------------------------------------------
-    # 7. Revenue
+    # 7. REVENUE
     # --------------------------------------------------------
 
     p1.revenue = round(
@@ -883,7 +856,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 8. Fulfilment Cost
+    # 8. FULFILMENT COST
     # --------------------------------------------------------
 
     p1.fulfilment_cost = frc_cost(
@@ -895,7 +868,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 9. Base Emissions
+    # 9. BASE EMISSIONS
     # --------------------------------------------------------
 
     p1.base_emission = base_emission_value(
@@ -907,7 +880,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 10. Order Emissions
+    # 10. ORDER EMISSIONS
     # --------------------------------------------------------
 
     p1.order_emission = round(
@@ -923,7 +896,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 11. Total Emissions
+    # 11. TOTAL EMISSIONS
     # --------------------------------------------------------
 
     p1.total_emission = round(
@@ -939,7 +912,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 12. Carbon Cost
+    # 12. CARBON COST
     # --------------------------------------------------------
 
     p1.carbon_cost = round(
@@ -955,7 +928,7 @@ def set_payoffs(group: Group):
     )
 
     # --------------------------------------------------------
-    # 13. Profit
+    # 13. PROFIT
     # --------------------------------------------------------
 
     p1.profit = round(
@@ -972,7 +945,7 @@ def set_payoffs(group: Group):
         2
     )
 
-    # Practice rounds do not count toward experimental payoff.
+    # Practice rounds do not count toward formal payoff.
 
     if p1.is_practice:
         p1.payoff = cu(0)
@@ -1026,7 +999,7 @@ class ComprehensionCheck(Page):
 
 
 # ============================================================
-# INTRODUCTION PAGES
+# INTRO PAGES
 # ============================================================
 
 class PracticeIntro(Page):
@@ -1041,7 +1014,6 @@ class BlockIntro(Page):
     @staticmethod
     def is_displayed(player: Player):
 
-        # First formal round
         return (
             player.round_number
             == C.NUM_PRACTICE_ROUNDS + 1
@@ -1053,7 +1025,6 @@ class BlockIntro(Page):
         return dict(
             carbon_condition=player.carbon_condition,
             carbon_price=player.carbon_price,
-            sequence=player.sequence,
         )
 
 
@@ -1062,7 +1033,6 @@ class BlockTransition(Page):
     @staticmethod
     def is_displayed(player: Player):
 
-        # First round of formal Block 2
         return (
             player.round_number
             ==
@@ -1092,8 +1062,6 @@ class Decision(Page):
     @staticmethod
     def vars_for_template(player: Player):
 
-        # Start timing only once, even if page is refreshed.
-
         started = player.field_maybe_none(
             'decision_started_at'
         )
@@ -1102,12 +1070,15 @@ class Decision(Page):
             player.decision_started_at = time.time()
 
         if player.is_practice:
+
             round_label = (
                 f'Practice Round '
                 f'{player.round_number} '
                 f'of {C.NUM_PRACTICE_ROUNDS}'
             )
+
         else:
+
             round_label = (
                 f'Formal Round '
                 f'{player.formal_round} '
@@ -1188,18 +1159,20 @@ class Results(Page):
         )
 
         if player.is_practice:
+
             round_label = (
                 f'Practice Round '
                 f'{player.round_number} Results'
             )
+
         else:
+
             round_label = (
                 f'Formal Round '
                 f'{player.formal_round} Results'
             )
 
         return dict(
-
             round_label=round_label,
 
             is_practice=player.is_practice,
@@ -1210,12 +1183,7 @@ class Results(Page):
             carbon_condition=player.carbon_condition,
             carbon_price=player.carbon_price,
 
-            # ------------------------------------------------
-            # Final participant-facing feedback:
-            # ------------------------------------------------
-
             my_frc=player.frc,
-
             competitor_frc=opponent.frc,
 
             my_delivery_performance=(
@@ -1226,15 +1194,11 @@ class Results(Page):
                 opponent.delivery_performance
             ),
 
-            orders_received=(
-                player.orders_received
-            ),
+            orders_received=player.orders_received,
 
             revenue=player.revenue,
 
-            fulfilment_cost=(
-                player.fulfilment_cost
-            ),
+            fulfilment_cost=player.fulfilment_cost,
 
             carbon_cost=player.carbon_cost,
 
@@ -1273,9 +1237,7 @@ class End(Page):
         )
 
         return dict(
-            total_formal_profit=(
-                total_formal_profit
-            )
+            total_formal_profit=total_formal_profit
         )
 
 
@@ -1284,20 +1246,12 @@ class End(Page):
 # ============================================================
 
 page_sequence = [
-
     ComprehensionCheck,
-
     PracticeIntro,
-
     BlockIntro,
-
     BlockTransition,
-
     Decision,
-
     ResultsWaitPage,
-
     Results,
-
     End,
 ]
