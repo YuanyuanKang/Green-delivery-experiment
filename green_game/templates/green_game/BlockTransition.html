@@ -1,47 +1,42 @@
 {{ block title }}
-Carbon Price Change
+Carbon Pricing Environment Changed
 {{ endblock }}
 
 {{ block content }}
 
-<h4>The carbon policy has changed</h4>
+<h4>Block 1 is complete</h4>
 
 <p>
-You have completed Rounds 1–5 of the formal game.
+You have completed the first 9 formal rounds.
 </p>
 
 <p>
-From <b>Round 6</b> onwards, the carbon price will change from the
-<b>low carbon price</b> to the <b>high carbon price</b>.
+The Carbon Pricing environment has now changed.
 </p>
+
+<hr>
+
+<h4>New Carbon Price</h4>
 
 <div class="alert alert-warning">
-    <p><b>New policy setting:</b></p>
-    <p>
-        Carbon price: <b>High</b>
-    </p>
+    <h4>
+        {{ carbon_condition }} Carbon Price:
+        <b>{{ carbon_price }}</b>
+    </h4>
 </div>
 
 <p>
+This new Carbon Price will remain in effect for the next 9 formal rounds.
+</p>
+
+<p>
 All other game rules remain unchanged.
+Market Demand will continue to vary from round to round and will be shown
+before each FRC decision.
 </p>
 
 <p>
-You will continue to choose between:
-</p>
-
-<ul>
-    <li><b>Low FRC</b></li>
-    <li><b>Medium FRC</b></li>
-    <li><b>High FRC</b></li>
-</ul>
-
-<p>
-Consider the new carbon price when making your decisions in the remaining rounds.
-</p>
-
-<p>
-Click <b>Next</b> when you are ready to continue.
+Your objective remains to <b>maximise your platform's profit points</b>.
 </p>
 
 {{ next_button }}
