@@ -1094,6 +1094,19 @@ class Decision(Page):
             frc_cost_medium=C.FRC_COST_MEDIUM,
             frc_cost_high=C.FRC_COST_HIGH,
 
+            delivery_performance_low=get_delivery_performance(
+                player.demand_state,
+                'Low'
+            ),
+            delivery_performance_medium=get_delivery_performance(
+                player.demand_state,
+                'Medium'
+            ),
+            delivery_performance_high=get_delivery_performance(
+                player.demand_state,
+                'High'
+            ),
+
             revenue_per_order=C.REVENUE_PER_ORDER,
 
             base_emission_low=C.BASE_EMISSION_LOW,
