@@ -1,0 +1,63 @@
+{{ block title }}
+Formal Game
+{{ endblock }}
+
+{{ block content }}
+
+<h4>The formal game is about to begin</h4>
+
+<p>
+You have completed the practice rounds.
+</p>
+
+<p>
+You will now begin the <b>18 formal rounds</b> of the experiment.
+</p>
+
+<p>
+The formal game consists of two blocks of 9 rounds.
+</p>
+
+<hr>
+
+<h4>Current Carbon Pricing Environment</h4>
+
+<p>
+For the next 9 rounds, the Carbon Price will be:
+</p>
+
+<div class="alert alert-info">
+    <h4>
+        {{ carbon_condition }} Carbon Price:
+        <b>{{ carbon_price }}</b>
+    </h4>
+</div>
+
+<p>
+The Carbon Price will remain the same throughout this 9-round block.
+</p>
+
+<p>
+Market Demand may vary from round to round and will always be shown to you
+before you make your FRC decision.
+</p>
+
+<hr>
+
+<p>
+In every round, you will compete with another participant acting as the
+operations manager of another e-commerce platform.
+</p>
+
+<p>
+You will not see the competitor's current FRC choice before making your own decision.
+After both decisions have been submitted, you will receive the round results.
+</p>
+
+<p>
+Your objective is to <b>maximise your platform's profit points</b>.
+</p>
+
+{{ next_button }}
+
+{{ endblock }}
