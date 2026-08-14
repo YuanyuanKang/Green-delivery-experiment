@@ -1,144 +1,67 @@
 {{ block title }}
-{{ round_label }}
+Round {{ round_number }} / {{ total_rounds }}
 {{ endblock }}
 
 {{ block content }}
 
-{% if is_practice %}
-<div class="alert alert-info">
-    <b>Practice Round</b><br>
-    This round is for practice only and does not count toward your formal experimental payoff.
-</div>
-{% endif %}
-
-<h4>Current market conditions</h4>
-
-<table class="table table-bordered">
-    <tr>
-        <th>Market Demand</th>
-        <td>
-            <b>{{ demand_state }}</b>
-            — {{ market_demand }} market orders
-        </td>
-    </tr>
-
-    <tr>
-        <th>Carbon Price</th>
-        <td>
-            <b>{{ carbon_condition }}</b>
-            — {{ carbon_price }}
-        </td>
-    </tr>
-</table>
+<p><b>Your role: {{ my_role }}</b></p>
 
 <hr>
 
-<h4>Your decision</h4>
+<h4>Policy setting</h4>
+
+<p><b>Current carbon price: k = {{ current_k }}</b></p>
 
 <p>
-You are the operations manager of an e-commerce platform providing ultra-fast delivery.
-Your platform is competing with another platform for the market orders available in this round.
+The carbon price changes during the session:
+</p>
+
+<ul>
+    <li>Rounds 1–5: low carbon price, k = 2</li>
+    <li>Rounds 6–10: high carbon price, k = 10</li>
+</ul>
+
+<p>
+In each round, you will be randomly matched with one other participant from the participant pool.
 </p>
 
 <p>
-Choose your platform's <b>Fulfilment Resource Commitment (FRC)</b> for this operating period.
+Under the cap-and-trade mechanism:
 </p>
 
-<p>
-A higher FRC provides greater fulfilment capacity and may improve delivery performance,
-but it also creates higher fulfilment costs and environmental impact.
-</p>
+<ul>
+    <li>If your emissions are below the quota, you can earn money by selling unused allowances.</li>
+    <li>If your emissions exceed the quota, you must pay to buy additional allowances.</li>
+</ul>
 
-<p>
-You will <b>not</b> see your competitor's current FRC choice before submitting your own decision.
-</p>
-
-{{ formfield 'frc' }}
-
-<br>
-
-<details>
-    <summary><b>View decision rules</b></summary>
-
-    <br>
-
-    <h5>1. FRC and Fulfilment Cost</h5>
-
-    <table class="table table-sm table-bordered">
-        <thead>
-            <tr>
-                <th>FRC</th>
-                <th>Fulfilment Cost</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Low</td>
-                <td>{{ frc_cost_low }} points</td>
-            </tr>
-            <tr>
-                <td>Medium</td>
-                <td>{{ frc_cost_medium }} points</td>
-            </tr>
-            <tr>
-                <td>High</td>
-                <td>{{ frc_cost_high }} points</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h5>2. Revenue</h5>
-
-    <p>
-        Each fulfilled order generates
-        <b>{{ revenue_per_order }} revenue point</b>.
-    </p>
-
-    <h5>3. Environmental Impact</h5>
-
-    <p>
-        Your environmental impact has two components:
-    </p>
-
-    <ul>
-        <li>
-            Base environmental impact associated with your chosen FRC:
-            Low = {{ base_emission_low }},
-            Medium = {{ base_emission_medium }},
-            High = {{ base_emission_high }}
-        </li>
-
-        <li>
-            Each fulfilled order generates an additional
-            {{ emission_per_order }} environmental impact units.
-        </li>
-    </ul>
-
-    <p>
-        The current Carbon Price is applied to your total environmental impact
-        to determine your Carbon Cost.
-    </p>
-
-    <h5>4. Profit</h5>
-
-    <p>
-        <b>
-            Profit = Revenue − Fulfilment Cost − Carbon Cost
-        </b>
-    </p>
-
-    <p>
-        Your objective is to maximise your platform's profit points.
-    </p>
-
-    <p>
-        All calculations are performed automatically by the system.
-        You do not need to calculate the outcomes manually.
-    </p>
-
-</details>
+<p><b>Emission quota: C = {{ c_quota }}</b></p>
 
 <hr>
+
+<h4>Decision task</h4>
+
+<p>Please choose:</p>
+
+<ul>
+    <li><b>Production quantity (q)</b>: from 0 to 15</li>
+    <li><b>Emission level (g)</b>: from 1 to 5</li>
+</ul>
+
+<p>
+Your decisions determine:
+</p>
+
+<ul>
+    <li>market price</li>
+    <li>total emissions</li>
+    <li>carbon trading outcome</li>
+    <li>abatement cost</li>
+    <li>final profit</li>
+</ul>
+
+<hr>
+
+{{ formfields }}
 
 {{ next_button }}
 

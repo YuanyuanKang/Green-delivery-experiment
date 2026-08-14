@@ -1,115 +1,69 @@
 {{ block title }}
-{{ round_label }}
+Round {{ round_number }} / {{ total_rounds }}
 {{ endblock }}
 
 {{ block content }}
 
-{{ if is_practice }}
-<div class="alert alert-info">
-    <b>Practice Round</b><br>
-    This round is for practice only and does not count toward your formal experimental payoff.
-</div>
-{{ endif }}
-
-<h4>Market Conditions</h4>
-
-<table class="table table-bordered">
-    <tr>
-        <th>Market Demand</th>
-        <td>
-            {{ demand_state }} — {{ market_demand }} market orders
-        </td>
-    </tr>
-
-    <tr>
-        <th>Carbon Price</th>
-        <td>
-            {{ carbon_condition }} — {{ carbon_price }}
-        </td>
-    </tr>
-</table>
+<p><b>Your role: {{ my_role }}</b></p>
+<p><b>Your matched opponent in this round: {{ other_role }}</b></p>
 
 <hr>
 
-<h4>Operational and Competitive Results</h4>
+<h4>Policy setting</h4>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Your Platform</th>
-            <th>Competitor</th>
-        </tr>
-    </thead>
+<p><b>Current carbon price: k = {{ current_k }}</b></p>
 
-    <tbody>
-        <tr>
-            <th>FRC</th>
-            <td>{{ my_frc }}</td>
-            <td>{{ competitor_frc }}</td>
-        </tr>
-
-        <tr>
-            <th>Delivery Performance</th>
-            <td>{{ my_delivery_performance }}</td>
-            <td>{{ competitor_delivery_performance }}</td>
-        </tr>
-    </tbody>
-</table>
-
-<hr>
-
-<h4>Market Outcome</h4>
+<ul>
+    <li>Rounds 1–5: low carbon price, k = 2</li>
+    <li>Rounds 6–10: high carbon price, k = 10</li>
+</ul>
 
 <p>
-    <b>Orders Received:</b>
-    {{ orders_received }} out of {{ market_demand }} market orders
+In each round, you are randomly matched with one other participant from the participant pool.
 </p>
 
 <p>
-    <b>Revenue:</b>
-    {{ revenue|to2 }} points
+Under the cap-and-trade mechanism, if your emissions are below the quota, you earn money by selling unused allowances.
+If your emissions exceed the quota, you pay to buy additional allowances.
 </p>
 
 <hr>
 
-<h4>Costs</h4>
-
-<p>
-    <b>Fulfilment Cost:</b>
-    {{ fulfilment_cost|to2 }} points
-</p>
-
-<p>
-    <b>Carbon Cost:</b>
-    {{ carbon_cost|to2 }} points
-</p>
+<h4>Your decision</h4>
+<p>Quantity (q): {{ my_q }}</p>
+<p>Emission level (g): {{ my_g }}</p>
 
 <hr>
 
-<div class="card">
-    <div class="card-body">
+<h4>Matched opponent's decision</h4>
+<p>Quantity (q): {{ other_q }}</p>
+<p>Emission level (g): {{ other_g }}</p>
 
-        <h4>Final Result</h4>
+<hr>
 
-        <p>
-            Profit =
-            Revenue − Fulfilment Cost − Carbon Cost
-        </p>
+<h4>Market outcome</h4>
+<p>Market price: {{ price }}</p>
 
-        <h3>
-            Your Profit:
-            <b>{{ profit|to2 }} points</b>
-        </h3>
+<hr>
 
-    </div>
-</div>
-
-<br>
+<h4>Your outcome</h4>
+<ul>
+    <li>Emission: {{ emission }}</li>
+    <li>Revenue: {{ revenue }}</li>
+    <li>Carbon trading payoff: {{ carbon }}</li>
+    <li>Abatement cost: {{ abate }}</li>
+</ul>
 
 <p>
-Use the result of this round to inform your decision in the next round.
+    <b>Note:</b> A positive carbon trading payoff means you earned money by selling unused allowances.
+    A negative value means you paid to buy additional allowances.
 </p>
+
+<p><b>Your profit: {{ profit }}</b></p>
+
+<hr>
+
+<p>Please review the outcome and proceed to the next round.</p>
 
 {{ next_button }}
 
