@@ -2,7 +2,13 @@
 {{ round_label }}
 {{ endblock }}
 
+
 {{ block content }}
+
+<div class="alert alert-secondary">
+    <b>You are Player {{ player_number }}</b>
+</div>
+
 
 {{ if is_practice }}
 <div class="alert alert-info">
@@ -10,6 +16,7 @@
     This round is for practice only and does not count toward your formal experimental payoff.
 </div>
 {{ endif }}
+
 
 <h4>Market Conditions</h4>
 
@@ -29,7 +36,9 @@
     </tr>
 </table>
 
+
 <hr>
+
 
 <h4>Operational and Competitive Results</h4>
 
@@ -57,7 +66,9 @@
     </tbody>
 </table>
 
+
 <hr>
+
 
 <h4>Market Outcome</h4>
 
@@ -71,7 +82,9 @@
     {{ revenue|to2 }} points
 </p>
 
+
 <hr>
+
 
 <h4>Costs</h4>
 
@@ -85,7 +98,9 @@
     {{ carbon_cost|to2 }} points
 </p>
 
+
 <hr>
+
 
 <div class="card">
     <div class="card-body">
@@ -93,8 +108,9 @@
         <h4>Final Result</h4>
 
         <p>
-            Profit =
-            Revenue − Fulfilment Cost − Carbon Cost
+            <b>
+                Profit = Revenue − Fulfilment Cost − Carbon Cost
+            </b>
         </p>
 
         <h3>
@@ -105,12 +121,16 @@
     </div>
 </div>
 
+
 <br>
 
+
 <p>
-Use the result of this round to inform your decision in the next round.
+    Use the result of this round to inform your decision in the next round.
 </p>
 
+
 {{ next_button }}
+
 
 {{ endblock }}
