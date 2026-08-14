@@ -454,7 +454,6 @@ def make_random_pairs(
 
         best_pairs = pairs
 
-        # With only 2 players in a pool there is no alternative opponent.
         if not avoid_previous or len(players) < 4:
             break
 
@@ -496,8 +495,6 @@ def creating_session(subsession: Subsession):
     # --------------------------------------------------------
     # 1. Fixed counterbalanced sequence assignment
     # --------------------------------------------------------
-    # Sequence A/B is assigned once in Round 1 and then
-    # retained for the same participant throughout all rounds.
 
     if subsession.round_number == 1:
 
@@ -620,20 +617,12 @@ def creating_session(subsession: Subsession):
             current_demand
         )
 
-        # Sequence A:
-        # Block 1 = Low CP
-        # Block 2 = High CP
-
         if player.sequence == 'A':
 
             if block == 1:
                 carbon_condition = 'Low'
             else:
                 carbon_condition = 'High'
-
-        # Sequence B:
-        # Block 1 = High CP
-        # Block 2 = Low CP
 
         else:
 
@@ -651,15 +640,6 @@ def creating_session(subsession: Subsession):
     # --------------------------------------------------------
     # 8. RANDOM REMATCHING WITHIN CURRENT CP CONDITION
     # --------------------------------------------------------
-    #
-    # In each formal block:
-    #
-    # Sequence A participants share one CP condition.
-    # Sequence B participants share the opposite CP condition.
-    #
-    # Matching within sequence therefore guarantees that
-    # matched participants face the same Carbon Price.
-    #
 
     sequence_a_players = [
         p for p in players
@@ -704,8 +684,6 @@ def set_payoffs(group: Group):
 
     p1, p2 = group.get_players()
 
-    # Both competitors must face identical market conditions.
-
     if p1.market_demand != p2.market_demand:
         raise ValueError(
             'Matched players have different market demand.'
@@ -719,10 +697,6 @@ def set_payoffs(group: Group):
     demand_state = p1.demand_state
     total_demand = p1.market_demand
     carbon_price = p1.carbon_price
-
-    # --------------------------------------------------------
-    # 1. DELIVERY PERFORMANCE
-    # --------------------------------------------------------
 
     p1.delivery_performance = get_delivery_performance(
         demand_state,
@@ -742,16 +716,8 @@ def set_payoffs(group: Group):
         p1.delivery_performance
     )
 
-    # --------------------------------------------------------
-    # 2. OPPONENT FRC
-    # --------------------------------------------------------
-
     p1.opponent_frc = p2.frc
     p2.opponent_frc = p1.frc
-
-    # --------------------------------------------------------
-    # 3. OPPONENT / PAIR IDs
-    # --------------------------------------------------------
 
     p1.opponent_id = (
         p2.participant.id_in_session
@@ -764,10 +730,6 @@ def set_payoffs(group: Group):
     p1.pair_id = group.id_in_subsession
     p2.pair_id = group.id_in_subsession
 
-    # --------------------------------------------------------
-    # 4. PERFORMANCE DIFFERENCE
-    # --------------------------------------------------------
-
     difference = abs(
         p1.delivery_performance
         - p2.delivery_performance
@@ -775,10 +737,6 @@ def set_payoffs(group: Group):
 
     p1.performance_difference = difference
     p2.performance_difference = difference
-
-    # --------------------------------------------------------
-    # 5. CUSTOMER ALLOCATION
-    # --------------------------------------------------------
 
     if difference == 0:
 
@@ -806,10 +764,6 @@ def set_payoffs(group: Group):
             p1.market_share = loser_share
             p2.market_share = winner_share
 
-    # --------------------------------------------------------
-    # 6. ORDERS
-    # --------------------------------------------------------
-
     p1.orders_received = int(
         round(
             total_demand
@@ -833,10 +787,6 @@ def set_payoffs(group: Group):
             'Allocated orders do not equal total market demand.'
         )
 
-    # --------------------------------------------------------
-    # 7. REVENUE
-    # --------------------------------------------------------
-
     p1.revenue = round(
         p1.orders_received
         * C.REVENUE_PER_ORDER,
@@ -849,10 +799,6 @@ def set_payoffs(group: Group):
         2
     )
 
-    # --------------------------------------------------------
-    # 8. FULFILMENT COST
-    # --------------------------------------------------------
-
     p1.fulfilment_cost = frc_cost(
         p1.frc
     )
@@ -861,10 +807,6 @@ def set_payoffs(group: Group):
         p2.frc
     )
 
-    # --------------------------------------------------------
-    # 9. BASE EMISSIONS
-    # --------------------------------------------------------
-
     p1.base_emission = base_emission_value(
         p1.frc
     )
@@ -872,10 +814,6 @@ def set_payoffs(group: Group):
     p2.base_emission = base_emission_value(
         p2.frc
     )
-
-    # --------------------------------------------------------
-    # 10. ORDER EMISSIONS
-    # --------------------------------------------------------
 
     p1.order_emission = round(
         p1.orders_received
@@ -889,10 +827,6 @@ def set_payoffs(group: Group):
         4
     )
 
-    # --------------------------------------------------------
-    # 11. TOTAL EMISSIONS
-    # --------------------------------------------------------
-
     p1.total_emission = round(
         p1.base_emission
         + p1.order_emission,
@@ -905,10 +839,6 @@ def set_payoffs(group: Group):
         4
     )
 
-    # --------------------------------------------------------
-    # 12. CARBON COST
-    # --------------------------------------------------------
-
     p1.carbon_cost = round(
         carbon_price
         * p1.total_emission,
@@ -920,10 +850,6 @@ def set_payoffs(group: Group):
         * p2.total_emission,
         2
     )
-
-    # --------------------------------------------------------
-    # 13. PROFIT
-    # --------------------------------------------------------
 
     p1.profit = round(
         p1.revenue
@@ -938,8 +864,6 @@ def set_payoffs(group: Group):
         - p2.carbon_cost,
         2
     )
-
-    # Practice rounds do not count toward formal payoff.
 
     if p1.is_practice:
         p1.payoff = cu(0)
@@ -1082,6 +1006,8 @@ class Decision(Page):
         return dict(
             round_label=round_label,
 
+            player_number=player.participant.id_in_session,
+
             is_practice=player.is_practice,
 
             demand_state=player.demand_state,
@@ -1098,10 +1024,12 @@ class Decision(Page):
                 player.demand_state,
                 'Low'
             ),
+
             delivery_performance_medium=get_delivery_performance(
                 player.demand_state,
                 'Medium'
             ),
+
             delivery_performance_high=get_delivery_performance(
                 player.demand_state,
                 'High'
@@ -1181,6 +1109,8 @@ class Results(Page):
 
         return dict(
             round_label=round_label,
+
+            player_number=player.participant.id_in_session,
 
             is_practice=player.is_practice,
 
