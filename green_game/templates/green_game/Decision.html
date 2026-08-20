@@ -18,11 +18,112 @@
 {% endif %}
 
 
+<!-- ===================================================== -->
+<!-- PREVIOUS ROUND SUMMARY                                -->
+<!-- ===================================================== -->
+
+{% if has_previous_result %}
+
+<div class="card mb-4">
+
+    <div class="card-header">
+        <b>Previous Round Summary — {{ previous_round_label }}</b>
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-sm table-bordered mb-3">
+
+            <tr>
+                <th>Previous Market Demand</th>
+                <td>
+                    {{ previous_demand_state }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Previous Carbon Price</th>
+                <td>
+                    {{ previous_carbon_price }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Your FRC</th>
+                <td>
+                    <b>{{ previous_frc }}</b>
+                </td>
+            </tr>
+
+            <tr>
+                <th>Competitor FRC</th>
+                <td>
+                    {{ previous_competitor_frc }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>Your Market Share</th>
+                <td>
+                    {{ previous_market_share }}%
+                </td>
+            </tr>
+
+            <tr>
+                <th>Round Profit</th>
+                <td>
+                    <b>{{ previous_profit }} points</b>
+                </td>
+            </tr>
+
+        </table>
+
+
+        {% if not is_practice %}
+
+        <div class="alert alert-success mb-0">
+            <b>
+                Cumulative Formal Profit:
+                {{ cumulative_formal_profit }} points
+            </b>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- ===================================================== -->
+<!-- CUMULATIVE FORMAL PROFIT                              -->
+<!-- ===================================================== -->
+
+{% if not is_practice and not has_previous_result %}
+
+<div class="alert alert-success">
+    <b>
+        Cumulative Formal Profit:
+        {{ cumulative_formal_profit }} points
+    </b>
+</div>
+
+{% endif %}
+
+
+<!-- ===================================================== -->
+<!-- CURRENT MARKET CONDITIONS                             -->
+<!-- ===================================================== -->
+
 <h4>Current market conditions</h4>
 
 <table class="table table-bordered">
+
     <tr>
         <th>Market Demand</th>
+
         <td>
             <b>{{ demand_state }}</b>
             — {{ market_demand }} market orders
@@ -31,22 +132,30 @@
 
     <tr>
         <th>Carbon Price</th>
+
         <td>
             <b>{{ carbon_condition }}</b>
             — {{ carbon_price }}
         </td>
     </tr>
+
 </table>
 
 
 <hr>
 
 
+<!-- ===================================================== -->
+<!-- CURRENT DECISION                                      -->
+<!-- ===================================================== -->
+
 <h4>Your decision</h4>
 
 <p>
-    You are the operations manager of an e-commerce platform providing ultra-fast delivery.
-    Your platform is competing with another platform for the market orders available in this round.
+    You are the operations manager of an e-commerce platform
+    providing ultra-fast delivery.
+    Your platform is competing with another platform
+    for the market orders available in this round.
 </p>
 
 <p>
@@ -72,28 +181,38 @@
 <br>
 
 
+<!-- ===================================================== -->
+<!-- DECISION RULES                                        -->
+<!-- ===================================================== -->
+
 <details>
 
-    <summary><b>View decision rules</b></summary>
+    <summary>
+        <b>View decision rules</b>
+    </summary>
 
     <br>
 
 
-    <!-- ===================================================== -->
-    <!-- 1. FRC COST                                           -->
-    <!-- ===================================================== -->
+    <!-- ================================================= -->
+    <!-- 1. FRC COST                                       -->
+    <!-- ================================================= -->
 
     <h5>1. FRC and Fulfilment Cost</h5>
 
     <table class="table table-sm table-bordered">
+
         <thead>
+
             <tr>
                 <th>FRC</th>
                 <th>Fulfilment Cost</th>
             </tr>
+
         </thead>
 
         <tbody>
+
             <tr>
                 <td>Low</td>
                 <td>{{ frc_cost_low }} points</td>
@@ -108,13 +227,15 @@
                 <td>High</td>
                 <td>{{ frc_cost_high }} points</td>
             </tr>
+
         </tbody>
+
     </table>
 
 
-    <!-- ===================================================== -->
-    <!-- 2. DELIVERY PERFORMANCE                               -->
-    <!-- ===================================================== -->
+    <!-- ================================================= -->
+    <!-- 2. DELIVERY PERFORMANCE                           -->
+    <!-- ================================================= -->
 
     <h5>2. Delivery Performance</h5>
 
@@ -124,14 +245,18 @@
     </p>
 
     <table class="table table-sm table-bordered">
+
         <thead>
+
             <tr>
                 <th>FRC</th>
                 <th>Delivery Performance</th>
             </tr>
+
         </thead>
 
         <tbody>
+
             <tr>
                 <td>Low</td>
                 <td>{{ delivery_performance_low }}</td>
@@ -146,30 +271,37 @@
                 <td>High</td>
                 <td>{{ delivery_performance_high }}</td>
             </tr>
+
         </tbody>
+
     </table>
 
 
-    <!-- ===================================================== -->
-    <!-- 3. CUSTOMER ALLOCATION                                -->
-    <!-- ===================================================== -->
+    <!-- ================================================= -->
+    <!-- 3. CUSTOMER ALLOCATION                            -->
+    <!-- ================================================= -->
 
     <h5>3. Customer Allocation</h5>
 
     <p>
         Market share depends on the difference between
-        your delivery performance and your competitor's delivery performance.
+        your delivery performance and your competitor's
+        delivery performance.
     </p>
 
     <table class="table table-sm table-bordered">
+
         <thead>
+
             <tr>
                 <th>Delivery Performance Difference</th>
                 <th>Market Share</th>
             </tr>
+
         </thead>
 
         <tbody>
+
             <tr>
                 <td>0</td>
                 <td>50 / 50</td>
@@ -189,7 +321,9 @@
                 <td>11–20</td>
                 <td>58 / 42</td>
             </tr>
+
         </tbody>
+
     </table>
 
     <p>
@@ -200,9 +334,9 @@
     </p>
 
 
-    <!-- ===================================================== -->
-    <!-- 4. PROFIT                                             -->
-    <!-- ===================================================== -->
+    <!-- ================================================= -->
+    <!-- 4. PROFIT                                         -->
+    <!-- ================================================= -->
 
     <h5>4. Profit</h5>
 
