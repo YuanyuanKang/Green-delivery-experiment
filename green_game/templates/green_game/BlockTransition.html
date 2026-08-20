@@ -2,43 +2,54 @@
 Carbon Pricing Environment Changed
 {{ endblock }}
 
+
 {{ block content }}
 
 <h4>Block 1 is complete</h4>
 
 <p>
-You have completed the first 9 formal rounds.
+    You have completed the first 9 formal rounds.
 </p>
 
 <p>
-The Carbon Pricing environment has now changed.
+    A new Carbon Pricing environment will now apply.
 </p>
 
 <hr>
 
+
 <h4>New Carbon Price</h4>
 
 <div class="alert alert-warning">
+
     <h4>
         {{ carbon_condition }} Carbon Price:
         <b>{{ carbon_price }}</b>
     </h4>
+
 </div>
 
 <p>
-This new Carbon Price will remain in effect for the next 9 formal rounds.
+    This Carbon Price will remain unchanged
+    throughout the next 9 formal rounds.
 </p>
 
 <p>
-All other game rules remain unchanged.
-Market Demand will continue to vary from round to round and will be shown
-before each FRC decision.
+    All other game rules remain unchanged.
 </p>
 
 <p>
-Your objective remains to <b>maximise your platform's profit points</b>.
+    Market Demand will continue to vary from round to round
+    and will be shown before each FRC decision.
 </p>
+
+<p>
+    Your objective remains to
+    <b>maximise your cumulative platform profit across the formal rounds</b>.
+</p>
+
 
 {{ next_button }}
+
 
 {{ endblock }}
