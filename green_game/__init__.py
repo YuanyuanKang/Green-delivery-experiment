@@ -987,6 +987,10 @@ class Decision(Page):
         if started is None:
             player.decision_started_at = time.time()
 
+        # ----------------------------------------------------
+        # CURRENT ROUND LABEL
+        # ----------------------------------------------------
+
         if player.is_practice:
 
             round_label = (
@@ -1002,6 +1006,105 @@ class Decision(Page):
                 f'{player.formal_round} '
                 f'of {C.NUM_FORMAL_ROUNDS}'
             )
+
+        # ----------------------------------------------------
+        # PREVIOUS ROUND SUMMARY
+        # ----------------------------------------------------
+        # Shows only the realised outcome from the immediately
+        # preceding round. No counterfactual profits are shown.
+
+        has_previous_result = False
+        previous_round_label = ''
+        previous_demand_state = ''
+        previous_carbon_price = None
+        previous_frc = ''
+        previous_competitor_frc = ''
+        previous_market_share = None
+        previous_profit = None
+
+        if player.round_number > 1:
+
+            previous_player = player.in_round(
+                player.round_number - 1
+            )
+
+            previous_profit_value = (
+                previous_player.field_maybe_none('profit')
+            )
+
+            if previous_profit_value is not None:
+
+                has_previous_result = True
+
+                if previous_player.is_practice:
+                    previous_round_label = (
+                        f'Practice Round '
+                        f'{previous_player.round_number}'
+                    )
+                else:
+                    previous_round_label = (
+                        f'Formal Round '
+                        f'{previous_player.formal_round}'
+                    )
+
+                previous_demand_state = (
+                    previous_player.demand_state
+                )
+
+                previous_carbon_price = (
+                    previous_player.carbon_price
+                )
+
+                previous_frc = previous_player.frc
+
+                previous_competitor_frc = (
+                    previous_player.opponent_frc
+                )
+
+                previous_market_share = round(
+                    previous_player.market_share * 100,
+                    1
+                )
+
+                previous_profit = round(
+                    previous_profit_value,
+                    2
+                )
+
+        # ----------------------------------------------------
+        # CUMULATIVE FORMAL PROFIT
+        # ----------------------------------------------------
+        # Practice-round profits are excluded.
+        # This total contains only completed formal rounds.
+
+        cumulative_formal_profit = 0
+
+        first_formal_round = (
+            C.NUM_PRACTICE_ROUNDS + 1
+        )
+
+        last_completed_round = (
+            player.round_number - 1
+        )
+
+        if last_completed_round >= first_formal_round:
+
+            completed_formal_players = player.in_rounds(
+                first_formal_round,
+                last_completed_round,
+            )
+
+            cumulative_formal_profit = round(
+                sum(
+                    p.field_maybe_none('profit') or 0
+                    for p in completed_formal_players
+                ),
+                2
+            )
+
+        # ----------------------------------------------------
+        # TEMPLATE VARIABLES
+        # ----------------------------------------------------
 
         return dict(
             round_label=round_label,
@@ -1042,6 +1145,19 @@ class Decision(Page):
             base_emission_high=C.BASE_EMISSION_HIGH,
 
             emission_per_order=C.EMISSION_PER_ORDER,
+
+            # Previous-round summary
+            has_previous_result=has_previous_result,
+            previous_round_label=previous_round_label,
+            previous_demand_state=previous_demand_state,
+            previous_carbon_price=previous_carbon_price,
+            previous_frc=previous_frc,
+            previous_competitor_frc=previous_competitor_frc,
+            previous_market_share=previous_market_share,
+            previous_profit=previous_profit,
+
+            # Running total from formal rounds only
+            cumulative_formal_profit=cumulative_formal_profit,
         )
 
     @staticmethod
