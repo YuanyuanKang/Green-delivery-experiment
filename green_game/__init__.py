@@ -1327,6 +1327,30 @@ class Results(Page):
 
 
 # ============================================================
+# FORMAL GAME START - ALL PARTICIPANTS SYNCHRONISATION
+# ============================================================
+
+class FormalStartWaitPage(WaitPage):
+
+    wait_for_all_groups = True
+
+    title_text = 'Waiting for all participants'
+
+    body_text = (
+        'You have completed the two practice rounds. '
+        'Please wait here until all participants are ready. '
+        'The formal game will begin together.'
+    )
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return (
+            player.round_number
+            == C.NUM_PRACTICE_ROUNDS
+        )
+
+
+# ============================================================
 # END PAGE
 # ============================================================
 
@@ -1373,5 +1397,6 @@ page_sequence = [
     Decision,
     ResultsWaitPage,
     Results,
+    FormalStartWaitPage,
     End,
 ]
