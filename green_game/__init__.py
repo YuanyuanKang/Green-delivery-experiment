@@ -341,7 +341,7 @@ def get_demand_schedule(session_code, block_number):
 def get_sequence_assignments(subsession):
 
     """
-    Randomly and evenly assigns participants:
+    Assign participants to the two carbon-price sequences.
 
     Sequence A:
     Low CP -> High CP
@@ -349,18 +349,37 @@ def get_sequence_assignments(subsession):
     Sequence B:
     High CP -> Low CP
 
-    Session size must be divisible by 4 so that each
-    sequence pool contains an even number of participants.
+    Session-size rules:
+    - Minimum 4 participants.
+    - Total number of participants must be even.
+    - If N is divisible by 4, A and B are perfectly balanced.
+    - If N = 4k + 2, use the nearest even split
+      (e.g. 6 -> 2/4, 10 -> 4/6, 14 -> 6/8).
+    - For 4k + 2 sessions, which sequence receives the larger
+      pool is randomised at session level.
     """
 
     players = subsession.get_players()
     n = len(players)
 
-    if n % 4 != 0:
+    # --------------------------------------------------------
+    # 1. BASIC SESSION-SIZE CHECKS
+    # --------------------------------------------------------
+
+    if n < 4:
         raise ValueError(
-            'FRC pilot requires a session size divisible by 4 '
-            '(for example 4, 8, 12, 16, ... participants).'
+            'FRC pilot requires at least 4 participants.'
         )
+
+    if n % 2 != 0:
+        raise ValueError(
+            'FRC pilot requires an even number of participants '
+            '(for example 4, 6, 8, 10, 12, ...).'
+        )
+
+    # --------------------------------------------------------
+    # 2. RANDOMISE PARTICIPANT IDS
+    # --------------------------------------------------------
 
     participant_ids = [
         p.participant.id_in_session
@@ -375,10 +394,58 @@ def get_sequence_assignments(subsession):
 
     rng.shuffle(participant_ids)
 
+    # --------------------------------------------------------
+    # 3. DETERMINE EVEN A/B POOL SIZES
+    # --------------------------------------------------------
+
     half = n // 2
 
+    if half % 2 == 0:
+
+        # Examples:
+        # 8 -> 4 / 4
+        # 12 -> 6 / 6
+        # 16 -> 8 / 8
+
+        size_a = half
+        size_b = half
+
+    else:
+
+        # Examples:
+        # 6 -> 2 / 4
+        # 10 -> 4 / 6
+        # 14 -> 6 / 8
+
+        smaller = half - 1
+        larger = half + 1
+
+        # Randomise which sequence receives the larger pool,
+        # so Sequence A is not systematically smaller/larger.
+
+        if rng.choice([True, False]):
+            size_a = smaller
+            size_b = larger
+        else:
+            size_a = larger
+            size_b = smaller
+
+    # Defensive check:
+    # both matching pools must contain an even number of players.
+
+    if size_a % 2 != 0 or size_b % 2 != 0:
+        raise ValueError(
+            'Internal sequence-allocation error: '
+            'sequence pools must both contain an even number '
+            'of participants.'
+        )
+
+    # --------------------------------------------------------
+    # 4. ASSIGN SEQUENCES
+    # --------------------------------------------------------
+
     sequence_a_ids = set(
-        participant_ids[:half]
+        participant_ids[:size_a]
     )
 
     assignments = {}
