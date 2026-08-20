@@ -10,19 +10,21 @@
 </div>
 
 
-{% if is_practice %}
+{{ if is_practice }}
+
 <div class="alert alert-info">
     <b>Practice Round</b><br>
     This round is for practice only and does not count toward your formal experimental payoff.
 </div>
-{% endif %}
+
+{{ endif }}
 
 
 <!-- ===================================================== -->
 <!-- PREVIOUS ROUND SUMMARY                                -->
 <!-- ===================================================== -->
 
-{% if has_previous_result %}
+{{ if has_previous_result }}
 
 <div class="card mb-4">
 
@@ -79,7 +81,7 @@
         </table>
 
 
-        {% if not is_practice %}
+        {{ if not is_practice }}
 
         <div class="alert alert-success mb-0">
             <b>
@@ -88,20 +90,20 @@
             </b>
         </div>
 
-        {% endif %}
+        {{ endif }}
 
     </div>
 
 </div>
 
-{% endif %}
+{{ endif }}
 
 
 <!-- ===================================================== -->
 <!-- CUMULATIVE FORMAL PROFIT                              -->
 <!-- ===================================================== -->
 
-{% if not is_practice and not has_previous_result %}
+{{ if not is_practice and not has_previous_result }}
 
 <div class="alert alert-success">
     <b>
@@ -110,7 +112,7 @@
     </b>
 </div>
 
-{% endif %}
+{{ endif }}
 
 
 <!-- ===================================================== -->
