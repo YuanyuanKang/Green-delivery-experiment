@@ -1314,6 +1314,11 @@ class Results(Page):
                 opponent.delivery_performance
             ),
 
+            market_share=round(
+                player.market_share * 100,
+                1
+            ),
+
             orders_received=player.orders_received,
 
             revenue=player.revenue,
